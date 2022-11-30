@@ -1,5 +1,7 @@
 const express = require("express");
 const validator = require("validator");
+var cors = require("cors");
+app.use(cors());
 const {
   getUserFromDB,
   createUserInDB,
