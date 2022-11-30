@@ -1,19 +1,55 @@
 const express = require("express");
+const validator = require("validator");
+const {
+  getUserFromDB,
+  createUserInDB,
+  updateUserScoreInDB,
+  logToDB,
+} = require("./dbUtils");
 const app = express();
 const PORT = process.env.PORT || 4001;
 
-const sendToDb = (params) => {
-  console.log(params);
-  
+const randDice = (req, res, next) => {
+  let newdice = Math.floor(Math.random() * 6);
+  if (newdice === 2 && Math.random() > 0.5) newdice = 7;
+  req.randDice = newdice;
+  if (!req.query.email) return res.send({ newdice: req.randDice });
+  req.hasWon =
+    newdice === 2 || newdice === 4 || newdice === 5 || newdice === 6
+      ? true
+      : false;
+  next();
+};
+const validate = (req, res, next) => {
+  if (
+    req.query.email &&
+    validator.isEmail(req.query.email) &&
+    validator.isLength(req.query.email, { min: 0, max: 100 })
+  )
+    req.validEmail = req.query.email.toLowerCase();
+  else req.validEmail = "";
+  if (
+    req.query.name &&
+    validator.isLength(req.query.name, { min: 0, max: 30 }) &&
+    validator.isAlpha(req.query.name, "en-US", { ignore: " +%20" })
+  )
+    req.validName = validator.escape(req.query.name).toLowerCase();
+  else req.validName = "";
+  next();
 };
 
+app.use(
+  "/dice",
+  randDice,
+  validate,
+  getUserFromDB,
+  createUserInDB,
+  updateUserScoreInDB,
+  logToDB
+);
+
 app.get("/dice", (req, res, next) => {
-  let newdice = Math.floor(Math.random() * 6);
-  if (newdice === 2) {
-    if (Math.random() > 0.5) newdice = 7;
-  }
-  sendToDb(req.query);
-  res.send({ newdice: newdice });
+  res.send({ newdice: req.randDice });
 });
 
 app.listen(PORT, () => {
