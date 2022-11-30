@@ -6,6 +6,7 @@ const {
   createUserInDB,
   updateUserScoreInDB,
   logToDB,
+  getRandJoke,
 } = require("./dbUtils");
 const app = express();
 const PORT = process.env.PORT || 4001;
@@ -46,17 +47,17 @@ app.use(
   randDice,
   validate,
   getUserFromDB,
-  createUserInDB
-  // updateUserScoreInDB,
-  // logToDB
+  createUserInDB,
+  updateUserScoreInDB,
+  logToDB
 );
 
 app.get("/dice", (req, res, next) => {
   res.send({ newdice: req.randDice });
 });
 
-app.get("/joke", (req, res, next) => {
-  res.send({ newjoke: "joke number1" });
+app.get("/joke", getRandJoke, (req, res, next) => {
+  res.send({ newjoke: req.joke });
 });
 
 app.listen(PORT, () => {

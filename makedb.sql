@@ -23,6 +23,11 @@ CREATE TABLE IF NOT EXISTS .`dicelog` (
     PRIMARY KEY (`log_id`)
 );
 
-
 INSERT INTO dicelog (email,won,dice_number,title)  
-VALUES ('trh4@walla.com', 1, '5', 'title is title' )
+VALUES ('trh4@walla.com', 1, '5', 'title is title' );
+
+CREATE TABLE IF NOT EXISTS .`jokes` (
+    `joke_id` INT AUTO_INCREMENT,
+	`title` varchar(255) NOT NULL,
+    PRIMARY KEY (`joke_id`)
+);

@@ -1,3 +1,4 @@
+const { response } = require("express");
 let mysql = require("mysql");
 let config = require("./config.js");
 
@@ -70,9 +71,24 @@ const logToDB = (req, res, next) => {
   connection.end();
   next();
 };
+
+const getRandJoke = (req, res, next) => {
+  let connection = mysql.createConnection(config);
+  // insert statment
+  let sql = `SELECT title FROM jokes ORDER BY RAND() LIMIT 1`;
+  connection.query(sql, (err, results, fields) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    req.joke = results[0].title;
+    next();
+  });
+  connection.end();
+};
 module.exports = {
   getUserFromDB,
   createUserInDB,
   updateUserScoreInDB,
   logToDB,
+  getRandJoke,
 };
