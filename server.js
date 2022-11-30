@@ -1,7 +1,6 @@
 const express = require("express");
 const validator = require("validator");
-var cors = require("cors");
-app.use(cors());
+const cors = require("cors");
 const {
   getUserFromDB,
   createUserInDB,
@@ -40,6 +39,7 @@ const validate = (req, res, next) => {
   next();
 };
 
+app.use(cors());
 app.use(
   "/dice",
   randDice,
