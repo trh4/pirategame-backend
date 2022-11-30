@@ -11,10 +11,11 @@ const app = express();
 const PORT = process.env.PORT || 4001;
 
 const randDice = (req, res, next) => {
-  let newdice = Math.floor(1+Math.random() * 6);
+  let newdice = Math.floor(1 + Math.random() * 6);
   if (newdice === 2 && Math.random() > 0.5) newdice = 7;
   req.randDice = newdice;
-  if (!req.query.email) return res.send({ newdice: req.randDice });
+  if (!req.query.email || req.query.email === "undefined")
+    return res.send({ newdice: req.randDice });
   req.hasWon =
     newdice === 2 || newdice === 4 || newdice === 5 || newdice === 6
       ? true
@@ -45,13 +46,17 @@ app.use(
   randDice,
   validate,
   getUserFromDB,
-  createUserInDB,
-  updateUserScoreInDB,
-  logToDB
+  createUserInDB
+  // updateUserScoreInDB,
+  // logToDB
 );
 
 app.get("/dice", (req, res, next) => {
   res.send({ newdice: req.randDice });
+});
+
+app.get("/joke", (req, res, next) => {
+  res.send({ newjoke: "joke number1" });
 });
 
 app.listen(PORT, () => {
