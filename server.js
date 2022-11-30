@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 4001;
 
 const randDice = (req, res, next) => {
-  let newdice = Math.floor(Math.random() * 6);
+  let newdice = Math.floor(1+Math.random() * 6);
   if (newdice === 2 && Math.random() > 0.5) newdice = 7;
   req.randDice = newdice;
   if (!req.query.email) return res.send({ newdice: req.randDice });
