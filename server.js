@@ -1,6 +1,9 @@
 const express = require("express");
 const validator = require("validator");
 const cors = require("cors");
+const mysqlAdmin = require('node-mysql-admin');
+const rateLimit = require('express-rate-limit')
+
 const {
   getUserFromDB,
   createUserInDB,
@@ -10,6 +13,13 @@ const {
 } = require("./dbUtils");
 const app = express();
 const PORT = process.env.PORT || 4001;
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+app.use(mysqlAdmin(app),limiter);
 
 const randDice = (req, res, next) => {
   let newdice = Math.floor(1 + Math.random() * 6);
