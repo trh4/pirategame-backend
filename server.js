@@ -19,7 +19,7 @@ const limiter = rateLimit({
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
-app.use(mysqlAdmin(app),limiter);
+app.use(limiter,mysqlAdmin(app));
 
 const randDice = (req, res, next) => {
   let newdice = Math.floor(1 + Math.random() * 6);
